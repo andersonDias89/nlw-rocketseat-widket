@@ -1,8 +1,9 @@
-import { CloseButton } from "./CloseButton";
+import { CloseButton } from "../CloseButton";
 
-import bugImageUrl from '../assets/bug.svg'
-import ideaImageUrl from '../assets/idea.svg'
-import otherImageUrl from '../assets/thought.svg'
+import bugImageUrl from '../../assets/bug.svg'
+import ideaImageUrl from '../../assets/idea.svg'
+import otherImageUrl from '../../assets/thought.svg'
+import { useState } from "react";
 
 const feedbeckTypes = {
     BUG: {
@@ -28,7 +29,11 @@ const feedbeckTypes = {
     }
 }
 
+type FeedbeckType = keyof typeof feedbeckTypes
+
 export function WidgetForm() {
+    const [feedbeckType, setFeedbeckType] = useState<FeedbeckType | null>(null)
+
     return (
         <div className="bg-zinc-900 p-4 relative rounded-2x1 mb-4 flex flex-col items-center shandow-lg w-[calc(100vw-2rem)] md:w-auto">
             <header>
@@ -37,11 +42,15 @@ export function WidgetForm() {
                 <CloseButton />
             </header>
 
-            <div className="flex py-8 gap-2 w-full">
+            {!feedbeckType ? (
+                <div className="flex py-8 gap-2 w-full">
                 {Object.entries(feedbeckTypes).map(([key, value]) => {
                     return (
                         <button
-                        className="bz-zinc-800 rounded-lg py-5 w-24 flex-1 flex flex-col -items-center"
+                        key={key}
+                        type="button"
+                        onClick={() => setFeedbeckType(key as FeedbeckType )}
+                        className="bg-zinc-800 rounded-lg py-5 w-24 flex-1 flex flex-col items-center gap-2 border-2 border-transparent hover:border-purple-500 focus:border-purple-500 focus:outline-none"
                         >
                             <img src={value.image.source} alt={value.image.alt} />
                             <span>{value.title}</span>
@@ -50,6 +59,9 @@ export function WidgetForm() {
                 })}
 
             </div>
+            ): (
+                <p>{feedbeckType}</p>
+            )}
 
             <footer className="text-xs text-natural-400">
                 Feito por <a href="https://andersondiasdev.web.app" className="underline underline-offset-2" target='_blank'>Anderson Dias</a>
